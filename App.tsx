@@ -1,5 +1,6 @@
-import ProductFormScreen from './src/screens/ProductFormScreen';
+import React from "react";
+import MenuScreen from "./src/screens/MenuScreen";
 
 export default function App() {
-  return <ProductFormScreen />;
+  return <MenuScreen />;
 }

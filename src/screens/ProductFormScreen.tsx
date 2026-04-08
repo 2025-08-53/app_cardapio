@@ -1,31 +1,46 @@
-import React, { useState } from 'react';
-import { Alert, Button, StyleSheet, Text, TextInput, View } from 'react-native';
+import React, { useState } from "react";
+import {
+  Alert,
+  Button,
+  FlatList,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
+
+interface Product {
+  id: string;
+  name: string;
+  price: string;
+  description: string;
+}
 
 export default function ProductFormScreen() {
-  const [name, setName] = useState('');
-  const [price, setPrice] = useState('');
-  const [description, setDescription] = useState('');
+  const [name, setName] = useState("");
+  const [price, setPrice] = useState("");
+  const [description, setDescription] = useState("");
+
+  const [products, setProducts] = useState<Product[]>([]);
 
   function handleSave() {
     if (!name || !price) {
-      Alert.alert('Erro', 'Nome e preço são obrigatórios');
+      Alert.alert("Erro", "Nome e preço são obrigatórios");
       return;
     }
 
-    const product = {
+    const newProduct: Product = {
+      id: Date.now().toString(),
       name,
       price,
       description,
     };
 
-    console.log('Produto cadastrado:', product);
+    setProducts((prev) => [...prev, newProduct]);
 
-    Alert.alert('Sucesso', 'Produto cadastrado com sucesso!');
-
-    // Limpar formulário
-    setName('');
-    setPrice('');
-    setDescription('');
+    setName("");
+    setPrice("");
+    setDescription("");
   }
 
   return (
@@ -55,6 +70,20 @@ export default function ProductFormScreen() {
       />
 
       <Button title="Cadastrar" onPress={handleSave} />
+
+      <Text style={styles.subtitle}>Lista de Produtos</Text>
+
+      <FlatList
+        data={products}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <View style={styles.card}>
+            <Text style={styles.name}>{item.name}</Text>
+            <Text>R$ {item.price}</Text>
+            <Text>{item.description}</Text>
+          </View>
+        )}
+      />
     </View>
   );
 }
@@ -63,19 +92,32 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    justifyContent: 'center',
   },
   title: {
     fontSize: 22,
-    marginBottom: 20,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    marginBottom: 10,
+    fontWeight: "bold",
+  },
+  subtitle: {
+    fontSize: 18,
+    marginVertical: 15,
+    fontWeight: "bold",
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     padding: 10,
     marginBottom: 10,
     borderRadius: 5,
+  },
+  card: {
+    borderWidth: 1,
+    borderColor: "#ddd",
+    padding: 10,
+    marginBottom: 10,
+    borderRadius: 5,
+  },
+  name: {
+    fontWeight: "bold",
   },
 });
